@@ -1,0 +1,8 @@
+{
+  "name": "order-system",
+  "private": true,
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "build:docker": "docker compose up -d --build"
+  }
+}
