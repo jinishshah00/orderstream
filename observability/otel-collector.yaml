@@ -1,0 +1,28 @@
+receivers:
+  otlp:
+    protocols: { http: {} }
+
+exporters:
+  logging: { loglevel: warn }
+  jaeger:
+    endpoint: jaeger:14250
+    tls: { insecure: true }
+
+processors:
+  batch: {}
+  memory_limiter:
+    check_interval: 1s
+    limit_percentage: 80
+    spike_limit_percentage: 25
+  resource:
+    attributes:
+      - action: insert
+        key: service.namespace
+        value: orderstream
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch, resource]
+      exporters: [jaeger, logging]

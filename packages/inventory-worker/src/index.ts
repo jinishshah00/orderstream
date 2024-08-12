@@ -1,6 +1,7 @@
 import pino from "pino";
 import { Kafka, logLevel } from "kafkajs";
 import { Pool } from "pg";
+import './otel';
 
 const logger = pino({ name: "inventory-worker" });
 

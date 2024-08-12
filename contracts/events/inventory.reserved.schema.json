@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.orderstream.dev/events/inventory.reserved.v1.json",
+  "title": "inventory.reserved v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["eventId", "type", "ts", "source", "correlationId", "version", "payload"],
+  "properties": {
+    "eventId": { "type": "string" },
+    "type":   { "const": "inventory.reserved" },
+    "ts":     { "type": "string", "format": "date-time" },
+    "source": { "type": "string" },
+    "correlationId": { "type": "string" },
+    "version": { "type": "integer", "const": 1 },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["orderId", "items"],
+      "properties": {
+        "orderId": { "type": "string" },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["sku", "qty"],
+            "properties": {
+              "sku": { "type": "string" },
+              "qty": { "type": "integer", "minimum": 1 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

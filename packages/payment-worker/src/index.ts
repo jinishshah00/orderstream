@@ -1,5 +1,6 @@
 import pino from "pino";
 import { Kafka, logLevel } from "kafkajs";
+import './otel';
 
 const logger = pino({ name: "payment-worker" });
 

@@ -7,7 +7,15 @@
     "dev": "tsx src/index.ts"
   },
   "dependencies": {
+    "@opentelemetry/exporter-trace-otlp-http": "^0.55.0",
+    "@opentelemetry/instrumentation-express": "^0.41.1",
+    "@opentelemetry/instrumentation-http": "^0.55.0",
+    "@opentelemetry/instrumentation-pg": "^0.45.1",
+    "@opentelemetry/instrumentation-redis-4": "^0.45.0",
+    "@opentelemetry/sdk-node": "^0.55.0",
+    "@opentelemetry/semantic-conventions": "^1.36.0",
     "kafkajs": "^2.2.4",
+    "opentelemetry-instrumentation-kafkajs": "^0.35.1",
     "pino": "^9.3.2"
   },
   "devDependencies": {

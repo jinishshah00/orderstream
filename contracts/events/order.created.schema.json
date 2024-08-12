@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.orderstream.dev/events/order.created.v1.json",
+  "title": "order.created v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["eventId", "type", "ts", "source", "correlationId", "version", "payload"],
+  "properties": {
+    "eventId": { "type": "string" },
+    "type":   { "const": "order.created" },
+    "ts":     { "type": "string", "format": "date-time" },
+    "source": { "type": "string" },
+    "correlationId": { "type": "string" },
+    "version": { "type": "integer", "const": 1 },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["orderId", "userId", "items", "amount", "currency"],
+      "properties": {
+        "orderId": { "type": "string" },
+        "userId":  { "type": "string" },
+        "amount":  { "type": "number" },
+        "currency": { "type": "string", "minLength": 3, "maxLength": 3 },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["sku", "qty"],
+            "properties": {
+              "sku": { "type": "string" },
+              "qty": { "type": "integer", "minimum": 1 },
+              "price": { "type": "number" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "examples": [{
+    "eventId": "01JABCDXYZ",
+    "type": "order.created",
+    "ts": "2025-01-01T00:00:00Z",
+    "source": "api",
+    "correlationId": "order-123",
+    "version": 1,
+    "payload": {
+      "orderId": "order-123",
+      "userId": "u-1",
+      "amount": 129.0,
+      "currency": "USD",
+      "items": [{ "sku": "SKU-1", "qty": 2, "price": 64.5 }]
+    }
+  }]
+}

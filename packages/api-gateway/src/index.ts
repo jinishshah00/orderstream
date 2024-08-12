@@ -5,6 +5,7 @@ import { v4 as uuid } from "uuid";
 import { createKafka } from "./kafka.js";
 import { pool } from "./db.js";
 import { redis } from "./cache.js";
+import './otel';
 
 const logger = pino({ name: "api-gateway" });
 const app = express();

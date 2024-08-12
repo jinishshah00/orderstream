@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.orderstream.dev/events/inventory.failed.v1.json",
+  "title": "inventory.failed v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["eventId", "type", "ts", "source", "correlationId", "version", "payload"],
+  "properties": {
+    "eventId": { "type": "string" },
+    "type":   { "const": "inventory.failed" },
+    "ts":     { "type": "string", "format": "date-time" },
+    "source": { "type": "string" },
+    "correlationId": { "type": "string" },
+    "version": { "type": "integer", "const": 1 },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["orderId", "reason"],
+      "properties": {
+        "orderId": { "type": "string" },
+        "reason":  { "type": "string" },
+        "retryable": { "type": "boolean", "default": true }
+      }
+    }
+  }
+}
