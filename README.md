@@ -3,6 +3,8 @@
 
 A minimal, production-style backend that accepts orders over HTTP and completes payment + inventory asynchronously via Kafka. State is materialized in Postgres, hot reads flow through a Redis read-through cache, and the full path is traced with OpenTelemetry → Jaeger.
 
+![End-to-end trace](docs/trace.png)
+
 ---
 
 ## Contents
@@ -25,41 +27,45 @@ A minimal, production-style backend that accepts orders over HTTP and completes 
 
 ```mermaid
 flowchart LR
+  %% --- Groups ---
   subgraph Edge
-    AG[api-gateway (Express)]
+    AG["api-gateway (Express)"]
   end
 
   subgraph Infra
-    K((Kafka))
-    P[(Postgres)]
-    R[(Redis)]
-    J[(Jaeger)]
+    K["Kafka"]
+    P["Postgres"]
+    R["Redis"]
+    J["Jaeger"]
   end
 
   subgraph Workers
-    PW[payment-worker]
-    IW[inventory-worker]
-    OS[order-service]
+    PW["payment-worker"]
+    IW["inventory-worker"]
+    OS["order-service"]
   end
 
-  Client((Clients)) -->|HTTP POST/GET| AG
+  %% --- Flows ---
+  C((Client)) -->|POST/GET| AG
 
-  AG -- produce order.created (key=orderId) --> K
+  AG -->|order.created (key=orderId)| K
   K --> PW
-  PW -- payment.authorized / payment.failed --> K
+  PW -->|payment.authorized / payment.failed| K
   K --> IW
-  IW -- inventory.reserved / inventory.failed --> K
+  IW -->|inventory.reserved / inventory.failed| K
   K --> OS
-  AG <-- read-through --> R
+
+  AG <-->|read-through| R
   R <--> P
   PW --> P
   IW --> P
   OS --> P
 
-  AG -. OTel OTLP .-> J
-  PW -. OTel OTLP .-> J
-  IW -. OTel OTLP .-> J
-  OS -. OTel OTLP .-> J
+  %% --- Tracing (dotted edges) ---
+  AG -.->|OTLP/HTTP| J
+  PW -.->|OTLP/HTTP| J
+  IW -.->|OTLP/HTTP| J
+  OS -.->|OTLP/HTTP| J
 ```
 
 ### Sequence (happy path)
